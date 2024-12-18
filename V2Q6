@@ -8,24 +8,24 @@ public class G101 {
         Scanner input = new Scanner(System.in);
         System.out.print("Enter the number of test cases: ");
         int testCases = input.nextInt();
-        input.nextLine(); // Consume newline
+        input.nextLine(); // Consume newline to ensure that next input could run correctly and be read
 
         for (int t = 0; t < testCases; t++) {
             System.out.println("Enter name: ");
             String name = input.nextLine();
 
-            System.out.println("Enter current time (hh:mm:ss): ");
+            System.out.println("Enter current time (hh:mm:ss): ");//the current time
             String currentTime = input.nextLine();
 
-            System.out.println("Enter target time (hh:mm:ss): ");
+            System.out.println("Enter target time (hh:mm:ss): ");//the target time
             String targetTime = input.nextLine();
 
             // Output header
             System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
-            // Generate and print initials
+            //to generate and print initials
             String initials = generateInitials(name);
-            if (isKahSing(name)) {
+            if (isKahSing(name)) {//method caller identify the special name
                 initials += "!!!!!!!!!!";
             }
             System.out.println(initials);
@@ -36,7 +36,7 @@ public class G101 {
             }
 
             // Special message for Kah Sing
-            if (isKahSing(name)) {
+            if (isKahSing(name)) {// again
                 System.out.println("WE KNOW IT’S YOU -- LEE KAH SING!");
             }
 
@@ -46,11 +46,11 @@ public class G101 {
             }
 
             // Calculate and display time interval
-            try {
-                String interval = calculateInterval(currentTime, targetTime);
+            try {   // i got the inspiration from week9 try to use the try-catch block to face the exception
+                String interval = calculateInterval(currentTime, targetTime);//to caculate the interval
                 System.out.println(interval);
             } catch (IllegalArgumentException e) {
-                System.out.println("Error: " + e.getMessage());
+                System.out.println("Error: " + e.getMessage());//.getMessage()is to get the details of the Exception
             }
 
             // Output footer
@@ -59,29 +59,29 @@ public class G101 {
     }
 
     // Method to generate initials
-    public static String generateInitials(String name) {
-        String[] parts = name.split("[\\s'_\\-\\.]+"); // Split by spaces, _, -, .
-        StringBuilder initials = new StringBuilder();
+    public static String generateInitials(String name) { // this method is used to get the initials then transform to uppercases
+        String[] parts = name.split("[\\s'_\\-\\.]+"); // Split by spaces, _, -, .then store them automally into array
+        StringBuilder initials = new StringBuilder();  // perform like StringBuffer, allow us to change the array dynamically
 
-        for (String part : parts) {
+        for (String part : parts) {  // Iterate over the array
             if (!part.equalsIgnoreCase("bin") && !part.equalsIgnoreCase("binti") &&
-                    !part.equalsIgnoreCase("a/l") && !part.equalsIgnoreCase("a/p")) {
-                initials.append(part.charAt(0));
+                    !part.equalsIgnoreCase("a/l") && !part.equalsIgnoreCase("a/p")) { to discard these element
+                initials.append(part.charAt(0));// then identify each elements' first character then store in the initials
             }
         }
-        return initials.toString().toUpperCase();
+        return initials.toString().toUpperCase(); // transform to string string and upper cases then return
     }
 
     // Method to check if a welcome message should be printed
     public static boolean isPrintingWelcomeMessage(String name) {
-        String normalized = name.toLowerCase().replaceAll("[\\s'_\\-\\.]+", "");
+        String normalized = name.toLowerCase().replaceAll("[\\s'_\\-\\.]+", "");// regular expression delete "[\\s'_\\-\\.]+", "
         String[] specialNames = {"kahsing", "leekahsing", "kahsinglee",
                 "suresh", "sureshalsubramaniam",
-                "ridwan", "ridwanfaiz", "ridwanfaizbinmohamadhassan"};
-        for (String specialName : specialNames) {
-            if (normalized.equals(specialName)) {
+                "ridwan", "ridwanfaiz", "ridwanfaizbinmohamadhassan"};//using array to store the name
+        for (String specialName : specialNames) {// iterate over the array
+            if (normalized.equals(specialName)) {//find the suitable name displayed in the array
                 return true;
-            }
+            
         }
         return false;
     }
@@ -90,16 +90,16 @@ public class G101 {
     public static boolean shouldSleep(String currentTime, String targetTime) {
         int currentSeconds = convertToSeconds(currentTime);
         int targetSeconds = convertToSeconds(targetTime);
-        return currentSeconds >= 0 && currentSeconds < 21600 && targetSeconds > 0 && targetSeconds < 21600;
+        return currentSeconds >= 0 && currentSeconds < 21600 && targetSeconds > 0 && targetSeconds < 21600;// 21600 = 6hours
     }
 
     // Convert time to seconds
     public static int convertToSeconds(String time) {
         try {
-            String[] parts = time.split("[:]");
-            int hours = Integer.parseInt(parts[0]);
-            int minutes = Integer.parseInt(parts[1]);
-            int seconds = Integer.parseInt(parts[2]);
+            String[] parts = time.split("[:]");// delete the":" then store the time in the parts eg:{12, 00, 00}
+            int hours = Integer.parseInt(parts[0]);// first element
+            int minutes = Integer.parseInt(parts[1]);// second element
+            int seconds = Integer.parseInt(parts[2]);// third element
 
             return hours * 3600 + minutes * 60 + seconds;
         } catch (Exception e) {
@@ -109,23 +109,29 @@ public class G101 {
 
     // Calculate the interval between two times
     public static String calculateInterval(String currentTime, String targetTime) {
-        int currentSeconds = convertToSeconds(currentTime);
-        int targetSeconds = convertToSeconds(targetTime);
+        int currentSeconds = convertToSeconds(currentTime);// call the method converttosecond to transform the time to seconds to calculate the time interval
+        int targetSeconds = convertToSeconds(targetTime);// same
 
-        int intervalSeconds = (targetSeconds >= currentSeconds)
-                ? targetSeconds - currentSeconds
-                : 24 * 3600 - currentSeconds + targetSeconds;
+        int intervalSeconds = (targetSeconds >= currentSeconds)// this identify if time is pass throuth midnight
+// if target >= second means did not pass the midnight then directly perform subtraction
+                ? targetSeconds - currentSeconds   // (satisfy the condition targetSeconds >= currentSeconds)
+                : 24 * 3600 - currentSeconds + targetSeconds;   // didnot satisfy then pass the midnight 
 
         int hours = intervalSeconds / 3600;
         int minutes = (intervalSeconds % 3600) / 60;
         int seconds = intervalSeconds % 60;
 
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-    }
+    }  // formatted output: String.format to format the hours,minutes,and seconds into two digits and concatenate into format HH:mm:ss a string form
 
-    // Check if the name is Kah Sing
+    // to check if the name is Kah Sing
     public static boolean isKahSing(String name) {
-        String normalized = name.replaceAll("[\\s'_\\-\\.]+", "").toLowerCase();
-        return normalized.equals("kahsing") || normalized.equals("leekahsing") || normalized.equals("kahsinglee");
+        String normalized = name.replaceAll("[\\s'_\\-\\.]+", "").toLowerCase();//by using regular expresion to replace all "[\\s'_\\-\\.]+", "" these things in name
+       //\\s: All whitespace characters (such as spaces and tabs)
+//   ': Single quote
+//   _: Underline
+//   -: Hyphen
+ //   \\.:period
+return normalized.equals("kahsing") || normalized.equals("leekahsing") || normalized.equals("kahsinglee");//identify and return the corresponding name
     }
 }
