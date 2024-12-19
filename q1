@@ -1,0 +1,94 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Bankingsystem {
+    private double balance;
+    private final ArrayList<String> transactions;
+
+    public Bankingsystem() {
+        this.balance = 1000.00;
+        this.transactions = new ArrayList<>();
+    }
+
+    public void checkBalance() {
+        System.out.printf("Current balance: RM%.2f%n", balance);
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            transactions.add("Deposited: RM" + String.format("%.2f", amount));
+            System.out.printf("Your balance is now: RM%.2f%n", balance);
+        } else {
+            System.out.println("Invalid deposit amount.");
+        }
+    }
+
+    
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            transactions.add("Withdrew: RM" + String.format("%.2f", amount));
+            System.out.printf("Your balance is: RM%.2f%n", balance);
+        } else if (amount > balance) {
+            System.out.println("Insufficient balance.");
+        } 
+    }
+
+    
+    public void printTransactions() {
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions yet.");
+        } else {
+            System.out.println("Transaction History:");
+            for (String transaction : transactions) {
+                System.out.println(transaction);
+            }
+        }
+    }
+
+    
+    public static void main(String[] args) {
+        Bankingsystem bank = new Bankingsystem();
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        System.out.println("Welcome to the Bank!");
+
+        do {
+            System.out.println("1. Check Balance");
+            System.out.println("2. Deposit Money");
+            System.out.println("3. Withdraw Money");
+            System.out.println("4. View Transaction History");
+            System.out.println("5. Exit");
+            System.out.print("Choose an option: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    bank.checkBalance();
+                    break;
+                case 2:
+                    System.out.print("Enter amount to deposit: RM");
+                    double depositAmount = sc.nextDouble();
+                    bank.deposit(depositAmount);
+                    break;
+                case 3:
+                    System.out.print("Enter amount to withdraw: RM");
+                    double withdrawAmount = sc.nextDouble();
+                    bank.withdraw(withdrawAmount);
+                    break;
+                case 4:
+                    bank.printTransactions();
+                    break;
+                case 5:
+                    System.out.printf("Thank you for using our banking system!%nYour final balance is: RM%.2f%n", bank.balance);
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+            }
+        } while (choice != 5);
+
+        sc.close();
+    }
+}
